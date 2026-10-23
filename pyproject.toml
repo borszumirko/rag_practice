@@ -7,7 +7,23 @@ authors = [
     { name = "borszumirko", email = "borszumirko@gmail.com" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "beautifulsoup4>=4.15.0",
+    "chromadb>=1.5.9",
+    "langchain>=1.4.6",
+    "langchain-chroma>=1.1.0",
+    "langchain-community>=0.4.2",
+    "langchain-core>=1.6.12",
+    "langchain-openai>=1.7.2",
+    "langchain-openrouter>=0.2.9",
+    "langgraph>=1.2.16",
+    "ollama>=0.6.3",
+    "openai>=3.35.1",
+    "pypdf>=6.21.1",
+    "python-dotenv>=1.2.4",
+    "rank-bm25>=0.2.2",
+    "requests>=2.34.2",
+]
 
 [project.scripts]
 rag = "rag:main"
