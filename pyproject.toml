@@ -17,6 +17,7 @@ dependencies = [
     "langchain-experimental>=0.4.2",
     "langchain-openai>=1.7.2",
     "langchain-openrouter>=0.2.9",
+    "langchain-postgres>=0.0.19",
     "langgraph>=1.2.16",
     "langsmith>=0.14.11",
     "ollama>=0.6.3",
