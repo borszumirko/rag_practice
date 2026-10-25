@@ -49,9 +49,6 @@ def get_logger(name: str = "production-api") -> logging.Logger:
 class MetricsCollector:
     """
     Collects and aggregates application metrics.
-
-    In production, replace with Prometheus client:
-        from prometheus_client import Counter, Histogram
     """
 
     def __init__(self):
@@ -123,48 +120,3 @@ class RequestTimer:
 
     def __exit__(self, *args):
         self.elapsed_ms = (time.time() - self.start) * 1000
-
-
-import time
-
-logger = get_logger()
-metrics = MetricsCollector()
-
-print("=== STRUCTURED LOGGING ===")
-print()
-logger.info("Application starting")
-logger.info(
-    "Processing request",
-    extra={"extra_data": {"user_id": "user-123", "thread_id": "thread-456"}},
-)
-logger.warning(
-    "Rate limit approaching", extra={"extra_data": {"current_rate": 18, "limit": 20}}
-)
-
-print()
-print("=== METRICS COLLECTION ===")
-print()
-
-# Simulate some requests
-with RequestTimer() as timer:
-    time.sleep(0.1)  # Simulate work
-metrics.record_request(
-    latency_ms=timer.elapsed_ms, input_tokens=50, output_tokens=100, cache_hit=False
-)
-print(f"Request 1: {timer.elapsed_ms:.1f}ms")
-
-with RequestTimer() as timer:
-    time.sleep(0.05)
-metrics.record_request(
-    latency_ms=timer.elapsed_ms, input_tokens=30, output_tokens=80, cache_hit=True
-)
-print(f"Request 2: {timer.elapsed_ms:.1f}ms (cache hit)")
-
-metrics.record_request(latency_ms=5.0, error=True)
-print(f"Request 3: error")
-
-print()
-print("=== METRICS SUMMARY ===")
-import json
-
-print(json.dumps(metrics.summary, indent=2))

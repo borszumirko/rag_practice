@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     # LLM Configuration
     openrouter_api_key: str
     primary_model: str = "nvidia/nemotron-3-ultra-550b-a55b:free"
-    fallback_model: str = "nvidia/nemotron-3-ultra-550b-a55b:free"
+    fallback_model: str = "nvidia/nemotron-3-super-120b-a12b:free"
 
     # LangSmith
     langsmith_tracing: bool = True
