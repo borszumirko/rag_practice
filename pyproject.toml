@@ -10,6 +10,7 @@ requires-python = ">=3.13"
 dependencies = [
     "beautifulsoup4>=4.15.0",
     "chromadb>=1.5.9",
+    "fastapi>=0.162.0",
     "langchain>=1.4.6",
     "langchain-chroma>=1.1.0",
     "langchain-community>=0.4.2",
@@ -22,15 +23,27 @@ dependencies = [
     "langsmith>=0.14.11",
     "ollama>=0.6.3",
     "openai>=3.35.1",
+    "pydantic-settings>=2.16.1",
     "pypdf>=6.21.1",
     "python-dotenv>=1.2.4",
     "rank-bm25>=0.2.2",
     "requests>=2.34.2",
+    "slowapi>=0.1.10",
+    "uvicorn>=0.54.0",
 ]
 
 [project.scripts]
-rag = "rag:main"
+rag = "app:main"
 
 [build-system]
 requires = ["uv_build>=0.12.15,<0.13.0"]
 build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "app"
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.1.1",
+]

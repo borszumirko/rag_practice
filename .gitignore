@@ -13,4 +13,4 @@ wheels/
 .env
 
 # tutorial files
-src/rag/tutorial/*
+src/app/tutorial/*
