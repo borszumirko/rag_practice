@@ -18,9 +18,9 @@ class Settings(BaseSettings):
     fallback_model: str = "nvidia/nemotron-3-super-120b-a12b:free"
 
     # LangSmith
-    langsmith_tracing: bool = True
-    langsmith_api_key: str = ""
-    langsmith_project: str = "rag_practice"
+    langchain_tracing_v2: bool = True
+    langchain_api_key: str = ""
+    langchain_project: str = "rag_practice"
     base_url: str = "https://openrouter.ai/api/v1"
 
     # Application
