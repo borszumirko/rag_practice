@@ -33,4 +33,4 @@ services:
       - key: LANGCHAIN_PROJECT
         value: production-api
     healthCheckPath: /health
-    autoDeploy: true
+    autoDeploy: false
