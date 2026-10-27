@@ -1,0 +1,36 @@
+# render.yaml — Infrastructure as Code for Render
+services:
+  - type: web
+    name: production-langgraph-api
+    runtime: python
+    region: frankfurt
+    plan: free
+    buildCommand: pip install uv && uv sync --frozen --no-dev
+    startCommand: uv run uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.13.5"
+      - key: APP_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      - key: RATE_LIMIT
+        value: "20/minute"
+      - key: CACHE_TTL_SECONDS
+        value: "300"
+      - key: MAX_RETRIES
+        value: "3"
+      - key: PRIMARY_MODEL
+        value: nvidia/nemotron-3-ultra-550b-a55b:free
+      - key: FALLBACK_MODEL
+        value: nvidia/nemotron-3-super-120b-a12b:free
+      - key: OPENROUTER_API_KEY
+        sync: false  # Must be set manually
+      - key: LANGCHAIN_API_KEY
+        sync: false  # Must be set manually
+      - key: LANGCHAIN_TRACING_V2
+        value: "true"
+      - key: LANGCHAIN_PROJECT
+        value: production-api
+    healthCheckPath: /health
+    autoDeploy: true
