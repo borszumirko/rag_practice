@@ -1,0 +1,4 @@
+# Both values are CHARACTERS, not tokens. Overlap is a target, not a guarantee.
+chunk_size: 1000
+chunk_overlap: 200
+separators: ["\n\n", "\n", " ", ""]

@@ -13,4 +13,7 @@ wheels/
 .env
 
 # tutorial files
-src/app/tutorial/*
+src/app/tutorial/
+
+# Downloaded datasets and generated experiment artifacts
+data/

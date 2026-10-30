@@ -1,0 +1,8 @@
+model: qwen/qwen3-embedding-8b
+batch_size: 128
+concurrency: 4
+index_prefetch_groups: 4
+provider_order: [Nebius, DeepInfra]
+provider_only: [Nebius, DeepInfra]
+# Qwen recommends instructions for queries, but plain text for documents.
+query_prefix: "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:"

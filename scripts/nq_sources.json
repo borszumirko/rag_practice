@@ -1,0 +1,19 @@
+{
+  "dataset": "google-research-datasets/natural_questions",
+  "revision": "e8103d566bef4154c2c12b17c6095ec5275840cc",
+  "config": "default",
+  "split": "validation",
+  "license": "cc-by-sa-3.0",
+  "files": [
+    {
+      "path": "default/validation-00000-of-00007.parquet",
+      "size": 193231423,
+      "sha256": "6566a5b9ac5dbe569f77cd7e565908a4194b538353d5dcd6243d7ea15e8e29fa"
+    },
+    {
+      "path": "default/validation-00001-of-00007.parquet",
+      "size": 185358345,
+      "sha256": "b919537b9fb8bd4a2cfa3dd4e80d330efd699bae29f0b5d82dd52107949c71bb"
+    }
+  ]
+}

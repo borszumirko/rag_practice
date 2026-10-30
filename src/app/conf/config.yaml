@@ -1,0 +1,35 @@
+defaults:
+  - chunking: recursive
+  - embedding: qwen3_8b
+  - generation: gemini_flash_lite
+  - _self_
+
+# chunks is offline. index, ask, and evaluate can incur API charges.
+command: chunks
+question: null
+dataset_dir: data/natural_questions/prepared
+artifacts_dir: data/rag
+chroma_dir: data/chroma
+embedding_cache: data/rag/embeddings.sqlite3
+retrieval:
+  k: 5
+  max_context_chars: 10000
+evaluation:
+  split: development
+  limit: 30
+  seed: 42
+  generate: true
+api:
+  base_url: https://openrouter.ai/api/v1
+  timeout_seconds: 120
+  interval_seconds: 1
+  rate_limit_retries: 3
+
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: data/runs/${now:%Y-%m-%d}/${now:%H-%M-%S-%f}
+  sweep:
+    dir: data/sweeps/${now:%Y-%m-%d}/${now:%H-%M-%S-%f}
+    subdir: ${hydra.job.num}

@@ -1,0 +1,4 @@
+model: baai/bge-m3
+batch_size: 64
+# Prefer the alternate endpoint when the default route is overloaded.
+provider_order: [DeepInfra, Parasail]
