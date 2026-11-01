@@ -4,7 +4,7 @@ defaults:
   - generation: gemini_flash_lite
   - _self_
 
-# chunks is offline. index, ask, and evaluate can incur API charges.
+# Recursive chunks is offline. Semantic chunks, index, ask, and evaluate can incur API charges.
 command: chunks
 question: null
 dataset_dir: data/natural_questions/prepared
@@ -12,6 +12,10 @@ artifacts_dir: data/rag
 chroma_dir: data/chroma
 embedding_cache: data/rag/embeddings.sqlite3
 retrieval:
+  method: dense
+  candidate_depth: 50
+  rrf_constant: 60
+  dense_weight: 0.75
   k: 5
   max_context_chars: 10000
 evaluation:
@@ -23,7 +27,7 @@ api:
   base_url: https://openrouter.ai/api/v1
   timeout_seconds: 120
   interval_seconds: 1
-  rate_limit_retries: 3
+  rate_limit_retries: 5
 
 hydra:
   job:

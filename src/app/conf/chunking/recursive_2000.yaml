@@ -1,0 +1,4 @@
+# Selected recursive experiment; sizes count characters.
+chunk_size: 2000
+chunk_overlap: 200
+separators: ["\n\n", "\n", " ", ""]

@@ -1,17 +1,15 @@
-# @format
-
 services:
-  agent-api:
+  rag-api:
     build: .
     ports:
       - '8000:8000'
     env_file:
       - .env
-    environment:
-      - APP_ENV=production
-      - LOG_LEVEL=INFO
+    command: ['.venv/bin/python', '-m', 'app.main', 'server.environment=production']
+    volumes:
+      - ./data:/src/app/data
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:8000/health']
+      test: ['CMD', 'python', '-c', "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 30s
       timeout: 10s
       retries: 3

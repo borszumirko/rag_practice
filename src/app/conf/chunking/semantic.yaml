@@ -1,0 +1,7 @@
+# Native LangChain sentence-level SemanticChunker; lengths vary, no overlap.
+method: semantic
+buffer_size: 1
+breakpoint_threshold_type: percentile
+breakpoint_threshold_amount: 95
+sentence_split_regex: '(?<=[.?!])\s+'
+min_chunk_size: null

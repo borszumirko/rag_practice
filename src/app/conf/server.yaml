@@ -1,0 +1,15 @@
+# Shared RAG models, paths, retrieval settings, and experiment commands.
+defaults:
+  - config
+  - override chunking: recursive_2000
+  - _self_
+
+command: serve
+server:
+  host: 0.0.0.0
+  port: ${oc.env:PORT,8000}
+  environment: development
+  log_level: info
+  rate_limit: 20/minute
+  cache_ttl_seconds: 300
+  tracing_enabled: false

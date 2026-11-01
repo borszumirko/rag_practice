@@ -1,43 +1,14 @@
-"""
-Centralized Configuration
-Uses pydantic-settings for validated environment variables.
-"""
+"""Compose the same Hydra configuration for ASGI imports and the CLI."""
 
-from dotenv import load_dotenv
-from pydantic_settings import BaseSettings
-from functools import lru_cache
+from pathlib import Path
 
-# Load .env into os.environ so LangChain/LangSmith SDK can read tracing config
-load_dotenv()
+from hydra import compose, initialize_config_dir
+from omegaconf import DictConfig
 
 
-class Settings(BaseSettings):
-    # LLM Configuration
-    openrouter_api_key: str
-    primary_model: str = "nvidia/nemotron-3-ultra-550b-a55b:free"
-    fallback_model: str = "nvidia/nemotron-3-super-120b-a12b:free"
-
-    # LangSmith
-    langchain_tracing_v2: bool = True
-    langchain_api_key: str = ""
-    langchain_project: str = "rag_practice"
-    base_url: str = "https://openrouter.ai/api/v1"
-
-    # Application
-    app_env: str = "development"
-    log_level: str = "INFO"
-    rate_limit: str = "20/minute"
-    cache_ttl_seconds: int = 300
-    max_retries: int = 3
-
-    model_config = {"env_file": ".env", "extra": "ignore"}
-
-    @property
-    def is_production(self) -> bool:
-        return self.app_env == "production"
-
-
-@lru_cache
-def get_settings() -> Settings:
-    """Cached settings instance - loaded once, reused everywhere."""
-    return Settings()
+def load_config(overrides: list[str] | None = None) -> DictConfig:
+    """Load server defaults without reading CLI arguments or requiring credentials."""
+    with initialize_config_dir(
+        version_base="1.3", config_dir=str(Path(__file__).parent / "conf")
+    ):
+        return compose(config_name="server", overrides=overrides or [])
