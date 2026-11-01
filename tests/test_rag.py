@@ -1,8 +1,62 @@
 from types import SimpleNamespace
+import base64
+import struct
 
 import pytest
 
-from app.rag import Embeddings, chunk_document, index, open_collection, retrieve, retrieval_scores, span_coverage
+from app.rag import Embeddings, OpenRouter, chunk_document, index, open_collection, retrieve, retrieval_scores, span_coverage
+
+
+def test_transient_tls_error_retries_and_records_only_error_type(tmp_path, monkeypatch):
+    import requests
+    import json
+    monkeypatch.setenv('OPENROUTER_API_KEY', 'test-key')
+    sleeps, calls = [], []
+    monkeypatch.setattr('app.rag.time.sleep', sleeps.append)
+
+    class Response:
+        status_code = 200
+        def json(self):
+            return {'data': [], 'usage': {'cost': 0}}
+
+    def post(*args, **kwargs):
+        calls.append(kwargs)
+        if len(calls) == 1:
+            raise requests.exceptions.SSLError('transient TLS error')
+        return Response()
+
+    monkeypatch.setattr('app.rag.requests.post', post)
+    cfg = SimpleNamespace(api=SimpleNamespace(base_url='https://openrouter.ai/api/v1',
+        interval_seconds=0, timeout_seconds=10, rate_limit_retries=1))
+    result = OpenRouter(cfg, tmp_path).call('embeddings', {'model': 'm', 'input': ['x']})
+    assert result['data'] == [] and len(calls) == 2 and 1 in sleeps
+    error = json.loads((tmp_path / 'api_errors.jsonl').read_text())
+    assert error['error_type'] == 'SSLError' and error['status'] is None
+    assert 'test-key' not in (tmp_path / 'api_errors.jsonl').read_text()
+
+
+def test_compact_embeddings_decode_correctly_and_reuse_legacy_cache(tmp_path):
+    cfg = SimpleNamespace(embedding_cache=str(tmp_path / "vectors.sqlite3"),
+                          embedding=SimpleNamespace(model="m", batch_size=10, concurrency=1,
+                                                    encoding_format="base64", max_batch_characters=5))
+    calls = []
+
+    class API:
+        def call(self, endpoint, payload):
+            calls.append(payload)
+            return {"data": [{"index": i, "embedding": base64.b64encode(struct.pack('<2f', len(t), 0.5)).decode()}
+                             for i, t in enumerate(payload['input'])]}
+
+    cache = Embeddings(cfg, API())
+    try:
+        result = cache.embed(["aaa", "bbbb", "c", "aaa"])
+        assert result == [[3.0, 0.5], [4.0, 0.5], [1.0, 0.5], [3.0, 0.5]]
+        assert [p['input'] for p in calls] == [["aaa"], ["bbbb", "c"]]
+        assert all(p['encoding_format'] == 'base64' for p in calls)
+        assert cache.embed(["aaa"]) == [result[0]]
+        assert len(calls) == 2
+    finally:
+        cache.db.close()
 
 
 def test_recursive_chunks_retain_exact_offsets_and_cover_all_nonspace_text():
